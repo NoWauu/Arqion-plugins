@@ -1,0 +1,14 @@
+package fr.nowayy.ores.listener;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+
+public class CrushingHammerListener implements Listener {
+	
+	@EventHandler
+	public void blockBreakEvent(BlockBreakEvent event) {
+		Block block = event.getBlock();
+	}
+
+}

@@ -1,0 +1,78 @@
+package fr.nowayy.arqionskins;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+public class Main extends JavaPlugin {
+	
+	public static final String PREFIX = "§7[§bArqionSkins§7] \u00BB §r";
+	
+	@Override
+	public void onEnable(){
+	
+		
+		
+	}
+
+
+	@Override
+	public void onDisable() {
+	
+		
+		
+	}
+	
+	public static void main(String[] args) {
+		
+		String query;
+		query = queryServerID("Altaks");
+		System.out.println(query);
+		
+	}
+	
+	// 6b83188d-5e5c-46f6-9a87-623c50c3e35e  - Alutakusu
+	private static String queryServerID(String pseudo){
+		
+		// "https://sessionserver.mojang.com/session/minecraft/profile/" + id.toString();
+		
+		String skinValue = "";
+		
+		try {
+			
+			URL obj = new URL("https://api.mojang.com/users/profiles/minecraft/" + pseudo);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			skinValue = response.toString();
+			
+			JsonObject playerIdJsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+			
+			String playerId = playerIdJsonObject.get("id").getAsString();
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return skinValue;
+		
+	}
+}

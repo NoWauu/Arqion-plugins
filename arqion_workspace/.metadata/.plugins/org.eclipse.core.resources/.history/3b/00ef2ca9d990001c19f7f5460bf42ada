@@ -1,0 +1,123 @@
+package fr.nowayy.ores;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
+
+import fr.nowayy.ores.utils.ItemManager;
+import fr.nowayy.ores.utils.ItemManager.PrebuiltItems;
+import fr.nowayy.ores.utils.Items;
+
+@SuppressWarnings("deprecation")
+public class Crafts {
+	
+	private static Items items = new Items();
+	public PrebuiltItems prebuild = new ItemManager.PrebuiltItems();
+	
+	public void hammerRecipe() {
+		ShapedRecipe hammerRecipe = new ShapedRecipe(items.hammerItem);
+		hammerRecipe.shape("SSS", "SLS", " L ");
+		hammerRecipe.setIngredient('S', Material.STONE);
+		hammerRecipe.setIngredient('L', Material.OAK_LOG);
+		
+		Bukkit.addRecipe(hammerRecipe);
+	}
+	
+	public void rockbreakerRecipe() {
+		ShapedRecipe rockbreakerRecipe = new ShapedRecipe(items.rockBreaker);
+		rockbreakerRecipe.shape("CCC", "MAM", "PPP");
+		rockbreakerRecipe.setIngredient('C', new RecipeChoice.ExactChoice(items.compressCobble));
+		rockbreakerRecipe.setIngredient('M', new RecipeChoice.ExactChoice(items.cable));
+		rockbreakerRecipe.setIngredient('P', new RecipeChoice.ExactChoice(PrebuiltItems.platinium_block));
+		
+		Bukkit.addRecipe(rockbreakerRecipe);
+	}
+	
+	public void compressorRecipe() {
+		ShapedRecipe compressorRecipe = new ShapedRecipe(items.compressor);
+		compressorRecipe.shape("CPM", "PAP", "QPZ");
+		compressorRecipe.setIngredient('C', new RecipeChoice.ExactChoice(PrebuiltItems.cobalt_block));
+		compressorRecipe.setIngredient('P', Material.PISTON);
+		compressorRecipe.setIngredient('M', new RecipeChoice.ExactChoice(items.cable));
+		compressorRecipe.setIngredient('A', Material.COBBLESTONE);
+		compressorRecipe.setIngredient('Q', new RecipeChoice.ExactChoice(PrebuiltItems.actinium_ingot));
+		compressorRecipe.setIngredient('Z', new RecipeChoice.ExactChoice(PrebuiltItems.copper_block));
+		
+		Bukkit.addRecipe(compressorRecipe);
+	}
+	
+	public void cobbleGeneratorRecipe() {
+		ShapedRecipe cobbleGeneratorRecipe = new ShapedRecipe(items.cobbleGen);
+		cobbleGeneratorRecipe.shape("PCP", "AZA", "PPP");
+		cobbleGeneratorRecipe.setIngredient('P', new RecipeChoice.ExactChoice(PrebuiltItems.platinium_block));
+		cobbleGeneratorRecipe.setIngredient('C', new RecipeChoice.ExactChoice(PrebuiltItems.cobalt_block));
+		cobbleGeneratorRecipe.setIngredient('A', new RecipeChoice.ExactChoice(items.cable));
+		cobbleGeneratorRecipe.setIngredient('Z', new RecipeChoice.ExactChoice(PrebuiltItems.actinium_block));
+		cobbleGeneratorRecipe.setIngredient('P', new RecipeChoice.ExactChoice(items.compressCobble));
+		
+		Bukkit.addRecipe(cobbleGeneratorRecipe);
+	}
+
+	public void cobbleGenT1() {
+		ShapedRecipe cobbleGenT1Recipe = new ShapedRecipe(items.cobbleGenT1);
+		cobbleGenT1Recipe.shape("CAC", "ACA", "CAC");
+		cobbleGenT1Recipe.setIngredient('C', new RecipeChoice.ExactChoice(items.compressCobble));
+		cobbleGenT1Recipe.setIngredient('A', new RecipeChoice.ExactChoice(PrebuiltItems.aluminium_block));
+		
+		Bukkit.addRecipe(cobbleGenT1Recipe);
+	}
+
+	public void cobbleGenT2() {
+		ShapedRecipe cobbleGenT2Recipe = new ShapedRecipe(items.cobbleGenT1);
+		cobbleGenT2Recipe.shape("CAC", "APA", "CAC");
+		cobbleGenT2Recipe.setIngredient('C', new RecipeChoice.ExactChoice(items.compressCobble));
+		cobbleGenT2Recipe.setIngredient('A', new RecipeChoice.ExactChoice(PrebuiltItems.copper_block));
+		cobbleGenT2Recipe.setIngredient('P', new RecipeChoice.ExactChoice(items.cobbleGenT1));
+		
+		Bukkit.addRecipe(cobbleGenT2Recipe);
+	}
+	public void cobbleGenT3() {
+		ShapedRecipe cobbleGenT1Recipe = new ShapedRecipe(items.cobbleGenT1);
+		cobbleGenT1Recipe.shape("CAC", "ACA", "CAC");
+		cobbleGenT1Recipe.setIngredient('C', new RecipeChoice.ExactChoice(items.compressCobble));
+		cobbleGenT1Recipe.setIngredient('A', new RecipeChoice.ExactChoice(PrebuiltItems.aluminium_block));
+		
+		Bukkit.addRecipe(cobbleGenT1Recipe);
+	}
+	public void cobbleGenT4() {
+		ShapedRecipe cobbleGenT1Recipe = new ShapedRecipe(items.cobbleGenT1);
+		cobbleGenT1Recipe.shape("CAC", "ACA", "CAC");
+		cobbleGenT1Recipe.setIngredient('C', new RecipeChoice.ExactChoice(items.compressCobble));
+		cobbleGenT1Recipe.setIngredient('A', new RecipeChoice.ExactChoice(PrebuiltItems.aluminium_block));
+		
+		Bukkit.addRecipe(cobbleGenT1Recipe);
+	}
+	
+		
+		public static final ItemStack[][] t2_components = {
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.copper_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()},
+				{new ItemManager.ItemBuilder(PrebuiltItems.copper_block).build(), 		new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.copper_block).build()},
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.copper_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()}
+		};
+		
+		public static final ItemStack[][] t3_components = {
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.cobalt_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()},
+				{new ItemManager.ItemBuilder(PrebuiltItems.cobalt_block).build(), 		new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.cobalt_block).build()},
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.cobalt_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()}
+		};
+		
+		public static final ItemStack[][] t4_components = {
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.platinium_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()},
+				{new ItemManager.ItemBuilder(PrebuiltItems.platinium_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build(), 				new ItemManager.ItemBuilder(PrebuiltItems.platinium_block).build()},
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.platinium_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()}
+		};
+		
+		public static final ItemStack[][] t5_components = {
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.actinium_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()},
+				{new ItemManager.ItemBuilder(PrebuiltItems.actinium_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.actinium_block).build()},
+				{new ItemManager.ItemBuilder(items.compressCobble).build(), 			new ItemManager.ItemBuilder(PrebuiltItems.actinium_block).build(), 	new ItemManager.ItemBuilder(items.compressCobble).build()}
+		};
+		
+	}

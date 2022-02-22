@@ -1,0 +1,135 @@
+package fr.nowayy.arqionskins;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
+import net.minecraft.server.v1_15_R1.EntityLiving;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_15_R1.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_15_R1.PacketPlayOutPlayerInfo;
+
+public class Main extends JavaPlugin implements Listener {
+		
+	@Override
+	public void onEnable(){
+	
+		Bukkit.getPluginManager().registerEvents(this, this);
+		
+	}
+
+	
+	@EventHandler
+	public void onPlayerPreLoginEvent(PlayerJoinEvent event){
+				
+		Player player = event.getPlayer();
+		CraftPlayer craftPlayer = ((CraftPlayer) player);
+	    GameProfile profile = new GameProfile(player.getUniqueId(), player.getName());
+		profile.getProperties().put("textures", new Property("textures", queryUserSkin(player.getName())));
+	    EntityLiving entityLiving = craftPlayer.getHandle();
+
+	    craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, craftPlayer.getHandle()));
+	    try {
+	        Field gp2 = entityLiving.getClass().getSuperclass().getDeclaredField("bT");
+	        gp2.setAccessible(true);
+	        gp2.set(entityLiving, profile);
+	        gp2.setAccessible(false);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return;
+	    }
+	    Bukkit.getOnlinePlayers().stream().filter(p -> p.getUniqueId() != player.getUniqueId()).forEach(p -> {
+			
+	        CraftPlayer craftp = ((CraftPlayer) p);
+	        EntityPlayer cp = craftp.getHandle();
+	        
+	        cp.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(player.getEntityId()));
+	        cp.playerConnection.sendPacket(new PacketPlayOutNamedEntitySpawn(craftPlayer.getHandle()));
+	        
+	        Bukkit.getServer().getScheduler().runTask(this, () -> p.hidePlayer(player));
+	        Bukkit.getServer().getScheduler().runTaskLater(this, () -> p.showPlayer(player), 5);
+	    });
+	}
+	
+	
+	private static String queryServerID(String pseudo){
+		
+		
+		try {
+			
+			URL obj = new URL("https://api.mojang.com/users/profiles/minecraft/" + pseudo);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			JsonObject playerIdJsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+			
+			return playerIdJsonObject.get("id").getAsString();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+	
+	private static String[] queryUserSkin(String pseudo){
+		
+		String playerID = queryServerID(pseudo);
+		
+		try {
+			
+			URL obj = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + playerID + "?unsigned=false");
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			JsonObject playerJsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+			
+			return new String[]{
+				playerJsonObject.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString(),
+				playerJsonObject.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("signature").getAsString()
+			};
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return new String[]{};		
+	}
+}

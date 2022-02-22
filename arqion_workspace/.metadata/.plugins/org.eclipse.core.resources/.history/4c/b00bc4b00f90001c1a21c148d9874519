@@ -1,0 +1,108 @@
+package fr.nowayy.arqionskins;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
+public class Main extends JavaPlugin implements Listener {
+	
+	public static final String PREFIX = "§7[§bArqionSkins§7] \u00BB §r";
+	
+	@Override
+	public void onEnable(){
+	
+		Bukkit.getPluginManager().registerEvents(this, this);
+		
+	}
+
+	
+	@EventHandler
+	public void onPlayerPreLoginEvent(PlayerJoinEvent event){
+				
+		CraftPlayer nmsPlayer = (CraftPlayer) event.getPlayer();
+		GameProfile profile = nmsPlayer.getProfile();
+		
+		String base64Skin = queryUserSkin(event.getPlayer().getName());
+		
+		profile.getProperties().put("textures", new Property("textures", base64Skin));
+				
+		Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(o -> o.hidePlayer(event.getPlayer())), 0);
+		Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(o -> o.showPlayer(event.getPlayer())), 15);
+	}
+	
+	
+	private static String queryServerID(String pseudo){
+		
+		
+		try {
+			
+			URL obj = new URL("https://api.mojang.com/users/profiles/minecraft/" + pseudo);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			JsonObject playerIdJsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+			
+			return playerIdJsonObject.get("id").getAsString();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+	
+	private static String queryUserSkin(String pseudo){
+		
+		String playerID = queryServerID(pseudo);
+		
+		try {
+			
+			URL obj = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + playerID);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			JsonObject playerJsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
+			
+			return playerJsonObject.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "";		
+	}
+}

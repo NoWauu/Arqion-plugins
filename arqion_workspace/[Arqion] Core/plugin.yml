@@ -1,0 +1,102 @@
+name : ArqionCore
+author : NoWay_y
+version : 1.0
+main : fr.nowayy.arqioncore.Main
+api-version : 1.15
+commands:
+  setspawn:
+    description: definit un point de spawn
+    permission: admin.arqionarqion.setspawn
+  spawn:
+    description: teleporte le joueur au spawn
+    usage: Mauvaise utilisation de la commande ! (/spawn)
+  kit:
+    description: affiche les kits disponibles (sans argument.s) / give le kit (avec argument)
+  createkit:
+    description: cree un kit
+    permission: admin.arqion.createkit
+    permission-message: Vous n'avez pas la permission de creer un kit !
+  delkit:
+    description: supprime un kit cree
+    permission: admin.arqion.deletekit
+    permission-message: Vous n'avez pas la permission de supprimer un kit !
+  save:
+    description: enregistre la creation d'un kit
+    permission: admin.arqion.savekit
+    permission-message: Vous n'avez pas la permission de faire ceci !
+  gamemode:
+    description: Change le mode de jeu d'un joueur
+    aliases: gm
+    permission: smod.arqion.gamemode
+  flyspeed:
+    description: Change la vitesse de vol d'un joueur
+    permission: smod.arqion.flyspeed
+  walkspeed:
+    description: Change la vitesse de marche d'un joueur 
+    permission : smod.arqion.walkspeed
+  home:
+    description: Teleporte un joueur a son home
+  sethome:
+    description: definit un point de home
+  delhome:
+    description: Supprime un home
+  homes:
+    description: Liste des homes
+  fly:
+    description: Autorise le vol
+    permission: smod.arqion.fly
+  announce:
+    description: Fait une annonce a tous les joueurs connectes
+    aliases: [bc, broadcast]
+    permission: resp.arqion.announce
+  godmod:
+    description: Rend invulnerable un joueur
+    permission : smod.arqion.godmod
+    aliases: god
+  openec:
+    description: Ouvre l'ender-chest du joueur
+    permission : mod.arqion.openec
+    aliases: ecsee
+  openinv:
+    description: Ouvre l'inventaire d'un joueur
+    permission: mod.arqion.openinv
+    aliases: invsee
+  worldannounce:
+    description: Fait une annonce sur un monde specifie
+    permission : smod.arqion.worldannounce
+    aliases: [wbc, worldbroadcast]
+  heal:
+    description: Soigne le joueur
+    permission : help.arqion.heal
+  feed:
+    description: Nourrit le joueur
+    permission : help.arqion.feed
+  playerinfo:
+    description: Donne les infos du joueur
+    permission : mod.arqion.playerinfo
+  speed:
+    description: Change la vitesse en fonction de la position
+    permission : smod.arqion.speed
+  killall:
+    description: tue les entitees
+    permission : smod.arqion.killall
+  enchant:
+    description: Enchante l'item en main
+    permission : mod.arqion.enchant
+    aliases: enchantment
+  craft:
+    description: Ouvre la table de craft
+    permission : grade.arqion.craft
+  furnace:
+    description: Ouvre un four
+    permission : grade.arqion.furnace
+  warps:
+    description: Ouvre l'inventaire des warps
+  setwarp:
+    description: Definit un warp
+    permission : resp.arqion.setwarp
+  delwarp:
+    description: Supprime un warp
+    permission : resp.arqion.delwarp
+  warp:
+    description: Teleporte a un warp en arg
